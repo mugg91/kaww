@@ -25,6 +25,20 @@ void onInit(CBlob@ this)
 	this.Tag("trap");
 }
 
+bool onReceiveCreateData(CBlob@ this, CBitStream@ stream)
+{
+	if (this.hasTag("broken quiet"))
+	{
+		CSprite@ sprite = this.getSprite();
+		
+		if (sprite !is null)
+			sprite.SetEmitSoundPaused(true);
+		
+		StopAnimation(this);
+	}
+	return true;
+}
+
 void onDie(CBlob@ this)
 {
 	CSprite@ sprite = this.getSprite();
@@ -102,6 +116,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 	{
 		u8 radio_channel = this.get_u8("radio channel");
 		SetChannel(this, radio_channels[radio_channel]);
+		this.Tag("random pos");
 		this.Untag("should switch channel");
 		this.SendCommand(this.getCommandID("randomize_play_pos"));
 	}
